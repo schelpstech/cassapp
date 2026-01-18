@@ -1,0 +1,426 @@
+/* ======================================================
+   OGUN STATE THEME
+   Primary: #1B5E20 (Green)
+   Accent:  #F9A825 (Gold)
+   Neutral: #F5F7F6 (White)
+====================================================== */
+
+/* ---------------------------
+   GLOBAL HEIGHT FIX
+---------------------------- */
+html, body {
+    height: 100%;
+}
+
+.wrapper,
+.main-sidebar {
+    min-height: 100vh;
+}
+
+/* ---------------------------
+   NAVBAR
+---------------------------- */
+.navbar-ogun {
+    background-color: #1B5E20 !important;
+}
+
+.navbar-ogun .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-ogun .nav-link:hover {
+    color: #F9A825 !important;
+}
+
+/* ---------------------------
+   SIDEBAR BACKGROUND (3-COLOR BLEND)
+---------------------------- */
+.main-sidebar {
+    background: linear-gradient(
+        180deg,
+        #1B5E20 0%,
+        #1B5E20 35%,
+        #F5F7F6 60%,
+        #F9A825 100%
+    );
+    color: #ffffff;
+}
+
+/* ---------------------------
+   BRAND SECTION
+---------------------------- */
+.brand-link {
+    background: rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff !important;
+}
+
+.brand-text {
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+/* ---------------------------
+   USER PANEL
+---------------------------- */
+.user-panel {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.user-panel .info a {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.user-panel small {
+    color: #c8e6c9;
+}
+
+/* ---------------------------
+   SIDEBAR NAV LINKS (PRIMARY)
+---------------------------- */
+.nav-sidebar .nav-link {
+    margin: 6px 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e8f5e9;
+    background: rgba(255, 255, 255, 0.08);
+    transition: all 0.25s ease;
+}
+
+.nav-sidebar .nav-link .nav-icon {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* Hover */
+.nav-sidebar .nav-link:hover {
+    background: rgba(27, 94, 32, 0.85);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+/* Active */
+.nav-sidebar .nav-link.active {
+    background: linear-gradient(135deg, #F9A825, #FFD54F);
+    color: #1B5E20;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.nav-sidebar .nav-link.active .nav-icon {
+    color: #1B5E20;
+}
+
+/* ---------------------------
+   TREEVIEW / SUBMENU
+---------------------------- */
+.nav-treeview {
+    padding-left: 12px;
+}
+
+.nav-treeview .nav-link {
+    margin: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: rgba(27, 94, 32, 0.15);
+    transition: all 0.2s ease;
+}
+
+.nav-treeview .nav-link:hover {
+    background: rgba(249, 168, 37, 0.18);
+}
+
+.nav-treeview .nav-link.active {
+    background: #F9A825;
+    color: #1B5E20;
+    font-weight: 600;
+}
+
+/* ---------------------------
+   FOOTER
+---------------------------- */
+.main-footer {
+    background-color: #1B5E20;
+    color: #ffffff;
+    border-top: 2px solid #F9A825;
+}
+
+.main-footer a {
+    color: #F9A825;
+    font-weight: 500;
+}
+
+.main-footer a:hover {
+    color: #ffffff;
+}
+
+/* ---------------------------
+   LOGOUT MODAL
+---------------------------- */
+.modal-content.bg-danger {
+    background-color: #1B5E20 !important;
+}
+
+.modal-content.bg-danger .modal-title,
+.modal-content.bg-danger p {
+    color: #ffffff;
+}
+
+
+/* Ensure sidebar stretches full page height */
+body {
+    min-height: 100vh;
+}
+
+.wrapper {
+    min-height: 100vh;
+}
+
+.main-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Prevent content overlap */
+.content-wrapper {
+    min-height: calc(100vh - 57px);
+}
+/* Soft glow for active menu */
+.nav-sidebar .nav-link.active {
+    position: relative;
+}
+
+.nav-sidebar .nav-link.active::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 0 0 rgba(249, 168, 37, 0.6);
+    animation: ogunPulse 1.8s infinite;
+    pointer-events: none;
+}
+
+@keyframes ogunPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(249, 168, 37, 0.6);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(249, 168, 37, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(249, 168, 37, 0);
+    }
+}
+/* Light mode override (future-ready) */
+body.light-mode .main-sidebar {
+    background: linear-gradient(
+        180deg,
+        #f5f7f6 0%,
+        #ffffff 40%,
+        #f9a825 100%
+    );
+    color: #1b5e20;
+}
+
+body.light-mode .nav-sidebar .nav-link {
+    color: #1b5e20;
+    background: rgba(27, 94, 32, 0.06);
+}
+
+body.light-mode .nav-sidebar .nav-link.active {
+    background: #1b5e20;
+    color: #ffffff;
+}
+
+
+/* =========================
+   OGUN DASHBOARD CARDS
+========================= */
+
+.ogun-card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ogun-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+}
+
+.ogun-card-body {
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.ogun-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #ffffff;
+}
+
+.ogun-card-content h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1b5e20;
+}
+
+.ogun-card-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Footer CTA */
+.ogun-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 22px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.ogun-card-footer i {
+    transition: transform 0.2s ease;
+}
+
+.ogun-card-footer:hover i {
+    transform: translateX(4px);
+}
+
+/* Color Variants */
+.ogun-card-danger .ogun-card-icon,
+.ogun-card-danger .ogun-card-footer {
+    background: linear-gradient(135deg, #c62828, #e53935);
+}
+
+.ogun-card-success .ogun-card-icon,
+.ogun-card-success .ogun-card-footer {
+    background: linear-gradient(135deg, #1b5e20, #2e7d32);
+}
+
+.ogun-card-warning .ogun-card-icon,
+.ogun-card-warning .ogun-card-footer {
+    background: linear-gradient(135deg, #f9a825, #ffd54f);
+    color: #1b5e20;
+}
+
+.ogun-card-info .ogun-card-icon,
+.ogun-card-info .ogun-card-footer {
+    background: linear-gradient(135deg, #0277bd, #039be5);
+}
+:root {
+    --ogun-green: #1f8a3b;
+    --ogun-yellow: #f2c94c;
+    --ogun-white: #ffffff;
+
+    --ogun-gradient: linear-gradient(
+        135deg,
+        #1f8a3b 0%,
+        #3fbf7f 50%,
+        #f2c94c 100%
+    );
+}
+/* General UI polish */
+.content-wrapper {
+    background: #f6f8fa;
+}
+
+/* Card styling */
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    background: var(--ogun-gradient);
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+/* Card footer */
+.card-footer {
+    background: #f9fafb;
+    font-size: 0.9rem;
+    color: #555;
+}
+/* Form controls */
+.form-control {
+    border-radius: 8px;
+    height: 45px;
+    border: 1px solid #dcdcdc;
+}
+
+.form-control:focus {
+    border-color: var(--ogun-green);
+    box-shadow: 0 0 0 0.15rem rgba(31, 138, 59, 0.25);
+}
+
+/* Input group icons */
+.input-group-text {
+    background: #eef7f1;
+    color: var(--ogun-green);
+    border-radius: 0 8px 8px 0;
+}
+
+/* Labels */
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+.btn-ogun {
+    background: var(--ogun-gradient);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    height: 48px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-ogun:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-ogun:disabled {
+    background: #bdbdbd;
+    cursor: not-allowed;
+}
+.form-disabled-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.form-group {
+    margin-bottom: 1.4rem;
+}
