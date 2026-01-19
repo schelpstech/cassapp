@@ -8,7 +8,7 @@ include '../appadmin/adminquery.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ASSOEC Manager - CASS III Clearance Portal</title>
+    <title> Manager - CASS III Clearance Portal</title>
     <link rel="icon" type="image/x-icon" href="../storage/app/ogun.png">
     <link rel="stylesheet" href="../view/dist/css/font.css">
 
@@ -33,7 +33,7 @@ include '../appadmin/adminquery.php';
                 ?>
             </div>
             <div class="card-body">
-                <p class="login-box-msg"><strong>ASSOEC Manager - Clearance Portal</strong></p>
+                <p class="login-box-msg"><strong> Manager - Clearance Portal</strong></p>
                 <form action="../appadmin/authenticator.php" method="post">
                     <div class="input-group mb-3">
                         <input type="text" name="username" class="form-control" placeholder="username" autocomplete="new-password" required="yes">
