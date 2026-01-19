@@ -8,7 +8,7 @@
             "searching": true,
             "ordering": true,
             "info": true,
-            "pageLength": 10,
+            "pageLength": 20,
             "order": [
                 [0, "asc"]
             ], // Sorting by S/N

@@ -80,6 +80,8 @@
 <script src="../plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 <script src="../plugins/custom/utility.js"></script>
 <script src="../plugins/custom/fetcher.js"></script>
+<script src="../plugins/custom/pwdview.js"></script>
+<script src="../plugins/custom/otpflow.js"></script>
 
 
 

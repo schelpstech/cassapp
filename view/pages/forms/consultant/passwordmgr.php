@@ -2,136 +2,112 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 offset-md-2">
+
                 <div class="card card-default">
                     <div class="card-header">
                         <h3 class="card-title"><strong>Change Password</strong></h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
                     </div>
+
                     <form action="../../app/companyModule.php" method="post" id="changePasswordForm">
                         <div class="card-body">
-                            <!-- Display Consultant User Code -->
+
+                            <!-- Consultant User Code -->
                             <div class="form-group">
-                                <label for="userCode">Consultant User Code:</label>
-                                <input type="text" id="userCode" class="form-control" 
-                                    value="<?php echo !empty($consultantDetails['user_name']) ? htmlspecialchars($consultantDetails['user_name']) : ''; ?>" 
-                                    disabled />
+                                <label>Consultant User Code</label>
+                                <input type="text" class="form-control"
+                                    value="<?= htmlspecialchars($consultantDetails['user_name'] ?? '') ?>" disabled>
                             </div>
 
-                            <!-- Old Password -->
+                            <!-- Consultant Company -->
                             <div class="form-group">
-                                <label for="oldPassword">Old Password:</label>
-                                <div class="input-group">
-                                    <input type="password" id="oldPassword" name="oldPassword" class="form-control" placeholder="Enter old password" required />
-                                    <div class="input-group-append">
-                                        <div class="input-group-text"><i class="fas fa-lock"></i></div>
+                                <label>Consultant Company</label>
+                                <input type="text" class="form-control"
+                                    value="<?= htmlspecialchars($consultantDetails['companyName'] ?? '') ?>" disabled>
+                            </div>
+
+                            <!-- Registered Email (NEW) -->
+                            <div class="form-group">
+                                <label>Registered Email Address</label>
+                                <input type="email" id="userEmail" class="form-control"
+                                    value="<?= htmlspecialchars($consultantDetails['contactEmail'] ?? '') ?>" readonly>
+                            </div>
+
+                            <!-- Request OTP -->
+                            <div class="form-group">
+                                <button type="button" id="requestOtpBtn" class="btn btn-ogun btn-block">
+                                    Request OTP
+                                </button>
+                            </div>
+
+                            <!-- OTP Input -->
+                            <div class="form-group d-none" id="otpSection">
+                                <label>Enter OTP</label>
+                                <input type="text" id="otpInput" class="form-control" maxlength="6">
+                                <button type="button" class="btn btn-success btn-sm mt-2" id="verifyOtpBtn">
+                                    Verify OTP
+                                </button>
+                            </div>
+
+                            <!-- PASSWORD SECTION (LOCKED UNTIL OTP VERIFIED) -->
+                            <div id="passwordSection" class="d-none">
+
+                                <!-- Old Password -->
+                                <div class="form-group">
+                                    <label>Old Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="oldPassword" name="oldPassword" class="form-control" required>
+                                        <div class="input-group-append togglePwd" data-target="oldPassword">
+                                            <span class="input-group-text"><i class="fas fa-eye"></i></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- New Password -->
-                            <div class="form-group">
-                                <label for="newPassword">New Password:</label>
-                                <div class="input-group">
-                                    <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter new password" required />
-                                    <div class="input-group-append">
-                                        <div class="input-group-text"><i class="fas fa-key"></i></div>
+                                <!-- New Password -->
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+                                        <div class="input-group-append togglePwd" data-target="newPassword">
+                                            <span class="input-group-text"><i class="fas fa-eye"></i></span>
+                                        </div>
                                     </div>
+                                    <small id="passwordHelp" class="form-text text-muted">
+                                        Minimum 8 chars, uppercase, lowercase, number & symbol
+                                    </small>
+                                    <div id="passwordStrength"></div>
                                 </div>
-                                <small id="passwordHelp" class="form-text text-muted">
-                                    Password must be at least 8 characters long, include an uppercase letter, lowercase letter, number, and symbol.
-                                </small>
-                                <div id="passwordStrength" class="mt-2"></div>
-                            </div>
 
-                            <!-- Confirm Password -->
-                            <div class="form-group">
-                                <label for="confirmPassword">Confirm Password:</label>
-                                <div class="input-group">
-                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm new password" required />
-                                    <div class="input-group-append">
-                                        <div class="input-group-text"><i class="fas fa-check-circle"></i></div>
+                                <!-- Confirm Password -->
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    <div class="input-group">
+                                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                                        <div class="input-group-append togglePwd" data-target="confirmPassword">
+                                            <span class="input-group-text"><i class="fas fa-eye"></i></span>
+                                        </div>
                                     </div>
+                                    <div id="passwordMatch"></div>
                                 </div>
-                                <div id="passwordMatch" class="mt-2"></div>
+
+                                <!-- Submit -->
+                                <button type="submit"
+                                    name="new_user_password_credential"
+                                    value="<?= $utility->inputEncode('user_password_editor_form'); ?>"
+                                    class="btn btn-ogun btn-block">
+                                    Update Login Credential
+                                </button>
+
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="row">
-                                <div class="col-md-6 offset-md-3">
-                                <button type="submit" name="new_user_password_credential" value="<?php echo $utility->inputEncode("user_password_editor_form"); ?>" class="btn btn-info btn-block">Update Login Credential</button>
-                                </div>
-                            </div>
                         </div>
                     </form>
+
                     <div class="card-footer">
-                        Use this form to securely update your login credentials.
+                        OTP verification is required before password change.
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<script>
-
-// Password strength validation
-    const newPasswordInput = document.getElementById("newPassword");
-    const confirmPasswordInput = document.getElementById("confirmPassword");
-    const passwordStrength = document.getElementById("passwordStrength");
-    const passwordMatch = document.getElementById("passwordMatch");
-
-    // Regular expression for password validation
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-
-    newPasswordInput.addEventListener("input", () => {
-        const password = newPasswordInput.value;
-
-        // Check password strength
-        if (!password) {
-            passwordStrength.innerHTML = "";
-        } else if (passwordRegex.test(password)) {
-            passwordStrength.innerHTML = "<span style='color: green;'>Strong Password</span>";
-        } else {
-            passwordStrength.innerHTML = "<span style='color: red;'>Password does not meet the required criteria</span>";
-        }
-
-        // Check if passwords match
-        checkPasswordMatch();
-    });
-
-    confirmPasswordInput.addEventListener("input", checkPasswordMatch);
-
-    function checkPasswordMatch() {
-        const newPassword = newPasswordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-
-        if (!confirmPassword) {
-            passwordMatch.innerHTML = "";
-        } else if (newPassword === confirmPassword) {
-            passwordMatch.innerHTML = "<span style='color: green;'>Passwords match</span>";
-        } else {
-            passwordMatch.innerHTML = "<span style='color: red;'>Passwords do not match</span>";
-        }
-    }
-
-    // Final form validation before submission
-    document.getElementById("changePasswordForm").addEventListener("submit", function (event) {
-        const newPassword = newPasswordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-
-        if (!passwordRegex.test(newPassword)) {
-            event.preventDefault();
-            alert("Your new password does not meet the required criteria.");
-        } else if (newPassword !== confirmPassword) {
-            event.preventDefault();
-            alert("New password and confirm password do not match.");
-        }
-    });
-</script>

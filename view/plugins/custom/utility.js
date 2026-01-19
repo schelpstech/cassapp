@@ -1,56 +1,63 @@
+
 document.addEventListener("DOMContentLoaded", function () {
-    const numCandidatesField = document.getElementById("numCandidatesCaptured");
-    const schoolTypeField = document.getElementById("schoolType");
-    const remittanceField = document.getElementById("remittanceDue");
-    const schoolNameField = document.getElementById("schoolName");
 
-    // Function to calculate remittance
+    const form = document.getElementById("recordCandidatesForm");
+
+    // Stop execution if this is not the target form
+    if (!form) {
+        return;
+    }
+
+    const numCandidatesField = form.querySelector("#numCandidatesCaptured");
+    const schoolTypeField    = form.querySelector("#schoolType");
+    const remittanceField    = form.querySelector("#remittanceDue");
+    const schoolNameField    = form.querySelector("#schoolName");
+
+    // Safety check
+    if (!numCandidatesField || !schoolTypeField || !remittanceField || !schoolNameField) {
+        console.error("Required fields are missing in recordCandidatesForm.");
+        return;
+    }
+
+    // Calculate remittance
     function calculateRemittance() {
-        const numCandidates = parseInt(numCandidatesField.value) || 0; // Default to 0 if invalid
-        const schoolType = schoolTypeField.value.trim(); // Get the school type
+        const numCandidates = parseInt(numCandidatesField.value, 10) || 0;
+        const schoolType = schoolTypeField.value.trim();
 
-        // Determine the rate based on the school type
         let ratePerCandidate = 0;
+
         if (schoolType === "Public") {
-            ratePerCandidate = 280; // Rate for Public schools
+            ratePerCandidate = 280;
         } else if (schoolType === "Private") {
-            ratePerCandidate = 130; // Rate for Private schools
+            ratePerCandidate = 130;
         } else {
-            remittanceField.value = "Enter Number of Candidates Captured";
-            return; // Exit if school type is invalid
+            remittanceField.value = "₦0.00";
+            return;
         }
 
-        // Calculate the remittance due
         const remittanceDue = numCandidates * ratePerCandidate;
 
-        // Update the remittance field
         remittanceField.value = remittanceDue.toLocaleString("en-NG", {
             style: "currency",
             currency: "NGN",
-            minimumFractionDigits: 2,
+            minimumFractionDigits: 2
         });
     }
 
-    // Function to handle changes in schoolName
+    // Update school type from selected school
     function updateSchoolType() {
         const selectedOption = schoolNameField.options[schoolNameField.selectedIndex];
-        const schoolType = selectedOption.dataset.schoolType || ""; // Fetch the school type from a custom data attribute
-        schoolTypeField.value = schoolType; // Update the schoolType field
+        const schoolType = selectedOption?.dataset?.schoolType || "";
 
-        // Reset the number of candidates field to 0
+        schoolTypeField.value = schoolType;
         numCandidatesField.value = 0;
 
-        // Recalculate the remittance (which will show as 0 initially)
         calculateRemittance();
     }
 
-    // Attach event listeners to all relevant fields
-    if (numCandidatesField && schoolTypeField && remittanceField && schoolNameField) {
-        numCandidatesField.addEventListener("input", calculateRemittance); // Recalculate when numCandidatesCaptured changes
-        schoolTypeField.addEventListener("input", calculateRemittance); // Recalculate when schoolType changes
-        schoolNameField.addEventListener("change", updateSchoolType); // Update schoolType, reset numCandidates, and recalculate when schoolName changes
-    } else {
-        console.error("Required form fields are missing.");
-    }
-});
+    // Event bindings (scoped to this form only)
+    numCandidatesField.addEventListener("input", calculateRemittance);
+    schoolTypeField.addEventListener("input", calculateRemittance);
+    schoolNameField.addEventListener("change", updateSchoolType);
 
+});

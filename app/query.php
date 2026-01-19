@@ -7,6 +7,7 @@ if (file_exists('../../controller/start.inc.php')) {
     include './controller/start.inc.php';
 };
 
+
 function route($pageId)
 {
     return '../../app/router.php?pageid=' . $GLOBALS['utility']->inputEncode($pageId);
@@ -60,8 +61,23 @@ $conditions = [
     ],
     'order_by' => 'SchoolName ASC',
 ];
-
 $allocatedSchools = $model->getRows($tblName, $conditions);
+
+
+// Select All Allocated Schools
+$tblName = 'tbl_schoolallocation';
+$conditions = [
+    'where' => [
+        'consultantID' => $_SESSION['activeID'],
+    ],
+    'joinl' => [
+        'tbl_schoollist' => ' ON tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
+        'examyear' => ' ON examyear.id = tbl_schoolallocation.examYear',
+        'lga_tbl' => ' ON lga_tbl.waecCode = tbl_schoollist.lgaCode',
+    ],
+    'order_by' => 'SchoolName ASC',
+];
+$consultantSchools = $model->getRows($tblName, $conditions);
 
 
     //Select Capturing Records 

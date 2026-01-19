@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#example1').DataTable({
             "responsive": true,
             "lengthChange": true,
@@ -8,20 +8,21 @@
             "searching": true,
             "ordering": true,
             "info": true,
-            "pageLength": 10,
-            "order": [[0, "asc"]], // Sorting by S/N
+            "pageLength": 20,
+            "order": [
+                [0, "asc"]
+            ], // Sorting by S/N
             "buttons": ["copy", "csv", "excel", "pdf", "print"] // Export buttons
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
 </script>
-
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> List of Allocated Schools
+                        <h3 class="card-title"> List of Allocated Schools to you as at
                             <?php echo date("d-m-Y") ?>
                         </h3>
                     </div>
@@ -40,8 +41,8 @@
                             <tbody>
                                 <?php
                                 $count = 1;
-                                if (!empty($allocatedSchools)) {
-                                    foreach ($allocatedSchools as $data) {
+                                if (!empty($consultantSchools)) {
+                                    foreach ($consultantSchools as $data) {
                                 ?>
                                         <tr>
                                             <td>
@@ -75,7 +76,6 @@
                                     echo 'No School Allocated for the Active Exam Year ::  ' . $_SESSION['examYear'];;
                                 }
                                 ?>
-
                             </tbody>
                         </table>
                     </div>

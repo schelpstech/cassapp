@@ -9,6 +9,7 @@ include_once 'model.class.php';
 include_once 'utility.class.php';
 include_once 'qrcode.class.php';
 include_once 'paystack.class.php';
+include_once 'mail.class.php';
 
 // database access parameters
 $db_host = 'localhost';
@@ -39,6 +40,7 @@ if ($db_conn !== null) {
     $utility = new Utility();
     $generator = new QRCodeGenerator();
     $paystack = new PaystackPayment();
+    $mail = new MailService();
 } else {
     // Handle the case when the connection fails (e.g., show an error message or stop further processing)
     echo "Database connection failed.";

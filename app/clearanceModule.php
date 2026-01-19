@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recordCandidates']) &
         $utility->redirectWithNotification('warning', 'Record already exists for this school and exam year. Please update the record instead.', 'capturingRecord');
     }
     // Generate a unique reference
-    $uniqueReference = uniqid('CAP', true);
+    $uniqueReference = 'CASS3'. $utility->generateRandomDigits(8).strtoupper($utility->generateRandomText(3));
 
     // Query to fetch school type based on school code
     $tblName = 'tbl_schoollist';
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recordCandidates']) &
         error_log($e->getMessage());
 
         // Redirect with error notification
-        $utility->redirectWithNotification('danger', 'An error occurred. Please try again.', 'capturingRecord');
+        $utility->redirectWithNotification('danger', $e->getMessage() . 'An error occurred. Please try again.', 'capturingRecord');
     }
 }
 

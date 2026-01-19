@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+      const form = document.getElementById("recordCandidatesForm");
+
+    // Stop execution if this is not the target form
+    if (!form) {
+        return;
+    }
+    
     const schoolNameField = document.getElementById("schoolName");
     const schoolTypeField = document.getElementById("schoolType");
 

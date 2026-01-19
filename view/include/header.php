@@ -47,14 +47,9 @@ if (!isset($_SESSION['active'])) {
     <link rel="stylesheet" href="../dist/css/ogun-theme.css">
 
     <!-- jQuery (CDN – pinned & secure) -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"
-        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5S8QprhXc9Ejo4kKDAdAM="
-        crossorigin="anonymous"></script>
-
-    <!-- html2canvas -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-    <!-- jsPDF (modern, stable) -->
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="../dist/js/jquery.min.js"></script>
+    <script src="../dist/js/html2canvas.min.js"></script>
+    <script src="../dist/js/jspdf.umd.min.js"></script>
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
