@@ -44,7 +44,7 @@ if ($ifExist >= 1) {
     $utility->redirectWithNotification('danger', 'Duplicate company record exists within this request.', 'consultantRecord');
     exit;
 }
-$userID = $cntUsers + 2;
+$userID = $cntUsers + 1;
 // Sanitize and validate input data
 $tblNameA = 'tbl_consultantdetails';
 $companyData = [

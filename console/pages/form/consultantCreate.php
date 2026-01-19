@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label>Consultant UserCode :</label>
                                 <div class="input-group date" data-target-input="nearest">
-                                    <input type="text" class="form-control" name="usercode" required="yes" value="<?php echo 'assoec'.substr(date("Y"),-2). ($cntUsers+2)?>" readonly/>
+                                    <input type="text" class="form-control" name="usercode" required="yes" value="<?php echo 'const'.substr(date("Y"),-2). ($cntUsers+1)?>" readonly/>
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa fa-synagogue"></i></div>
                                     </div>
