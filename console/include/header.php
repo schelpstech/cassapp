@@ -35,3 +35,5 @@ if (!isset($_SESSION['activeAdmin'])) {
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 </head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
