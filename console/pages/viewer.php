@@ -63,17 +63,21 @@ include '../include/aside.php';
                     include './report/transactionRecords.php';
                     break;
 
-                    case 'consultantClearedSchools':
-                        include './report/clearanceSummary.php';
-                        break;
+                case 'consultantClearedSchools':
+                    include './report/clearanceSummary.php';
+                    break;
 
-                    case 'reportSchoolClearance':
-                        include './report/clearanceSummary.php';
-                        break;
+                case 'reportSchoolClearance':
+                    include './report/clearanceSummary.php';
+                    break;
 
-                        case 'consultantpwdMgr':
-                            include './forms/consultant/passwordmgr.php';
-                            break;
+                case 'consultantpwdMgr':
+                    include './forms/consultant/passwordmgr.php';
+                    break;
+
+                case 'paymentSettings':
+                    include './form/paymentSettings.php';
+                    break;
                 default:
                     include './adminDashboard.php';
                     break;

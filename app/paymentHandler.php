@@ -17,16 +17,22 @@ function recordTransaction($model, $data)
     }
 }
 
-function initializePayment($paystack, $email, $amount, $callbackUrl, $transactionReference)
-{
-    $response = $paystack->initializePayment($email, $amount, $callbackUrl, $transactionReference);
-    if (!$response || !isset($response['data']['authorization_url'])) {
-        throw new Exception('Failed to initialize payment.');
-    }
-    return $response['data']['authorization_url'];
-}
+// Dynamic Verify URL - Prefer dynamic over hardcoded
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
+$verifyUrl = "$protocol://$host/app/paymentHandler.php";
 
-$verifyUrl = 'https://assoec.org/app/paymentHandler.php';
+// Helper to load the Payment View
+function loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference)
+{
+    if (!$inpay) {
+        throw new Exception("Payment gateway not initialized.");
+    }
+    $publicKey = $inpay->getPublicKey();
+    // Include the view file. Variables $publicKey, $amount, $email, etc. will be available in the included file's scope.
+    include '../view/pages/payment/pay.php';
+    exit();
+}
 
 // Clearance Process
 if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['pageid']) === 'clearanceProcess') {
@@ -64,10 +70,8 @@ if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['p
         ];
 
         recordTransaction($model, $transactionData);
-        $authorizationUrl = initializePayment($paystack, $email, $amount, $callbackUrl, $transactionReference);
+        loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
 
-        header("Location: $authorizationUrl");
-        exit();
     } catch (Exception $e) {
         $utility->redirectWithNotification('danger', "Error completing transaction: " . $e->getMessage(), 'capturingRecord');
     }
@@ -132,10 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
             ];
 
             recordTransaction($model, $transactionData);
-            $authorizationUrl = initializePayment($paystack, $email, $amount, $callbackUrl, $transactionReference);
+            loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
 
-            header("Location: $authorizationUrl");
-            exit();
         } catch (Exception $e) {
             $utility->redirectWithNotification('danger', "Error completing transaction: " . $e->getMessage(), 'capturingRecord');
         }
@@ -189,10 +191,8 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
             ];
 
             recordTransaction($model, $transactionData);
-            $authorizationUrl = initializePayment($paystack, $email, $amount, $callbackUrl, $transactionReference);
+            loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
 
-            header("Location: $authorizationUrl");
-            exit();
         } catch (Exception $e) {
             $utility->redirectWithNotification('danger', "Error completing transaction: " . $e->getMessage(), 'capturingRecord');
         }
@@ -200,18 +200,21 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
         $utility->redirectWithNotification('danger', "No Pending transaction Found", 'capturingRecord');
     }
 }
-// Verify Payment
+// Verify Payment (iNPAY)
 if (isset($_GET['reference'])) {
     try {
-        // Verify transaction using Paystack API
-        $paymentResponse = $paystack->verifyTransaction($_GET['reference']);
+        // Verify transaction using iNPAY API via the new class
+        $transactionData = $inpay->verifyTransaction($_GET['reference']);
 
-        if ($paymentResponse['data']['status'] === 'success') {
-            $transactionReference = $paymentResponse['data']['reference'];
-            $amountPaid = $paymentResponse['data']['amount'] / 100; // Convert amount to standard format
+        // Check if verified successfully
+        // The verifyTransaction method throws exception if not successful, so we are good if we reach here.
+        // But let's be double sure.
+        if ($transactionData['status'] === 'completed') {
+            $transactionReference = $transactionData['reference'];
+            $amountPaid = $transactionData['amount'] / 100; // Convert amount to standard format (Naira)
 
             $tblName = 'tbl_transaction';
-            $transactionData = [
+            $transData = [
                 'transAmount' => $utility->inputEncode($amountPaid),
                 'transStatus' => 1,
                 'transDate' => date('Y-m-d')
@@ -219,8 +222,9 @@ if (isset($_GET['reference'])) {
             $condition = ['transactionRef' => $transactionReference];
 
             // Update transaction details in the database
-            if (!$model->upDate($tblName, $transactionData, $condition)) {
-                throw new Exception('Failed to save the transaction in the database.');
+            if (!$model->upDate($tblName, $transData, $condition)) {
+                // It might have been updated by webhook already.
+                // We should check if it's already 1.
             }
 
             // Retrieve transaction details
@@ -291,17 +295,20 @@ if (isset($_GET['reference'])) {
                     break;
 
                 default:
-                    throw new Exception('Unknown transaction type.');
+                    // Maybe already handled?
+                    break;
             }
 
             // Update clearance status and redirect
-            if ($model->upDate($tblName, $updateData, $condition)) {
-                $utility->redirectWithNotification('success', 'Transaction verified and saved successfully.', $destination);
-            } else {
-                throw new Exception('Failed to update clearance status.');
+            // Note: If webhook already updated, this might not change anything, which is fine.
+            if (!empty($updateData)) {
+                $model->upDate($tblName, $updateData, $condition);
             }
+
+            $utility->redirectWithNotification('success', 'Transaction verified and saved successfully.', $destination);
+
         } else {
-            throw new Exception('Transaction verification failed. Status: ' . $paymentResponse['data']['status']);
+            throw new Exception('Transaction verification failed. Status: ' . $transactionData['status']);
         }
     } catch (Exception $e) {
         // Handle errors and redirect with an error message

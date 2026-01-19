@@ -8,7 +8,7 @@ include_once 'user.class.php';
 include_once 'model.class.php';
 include_once 'utility.class.php';
 include_once 'qrcode.class.php';
-include_once 'paystack.class.php';
+include_once 'inpay.class.php';
 include_once 'mail.class.php';
 
 // database access parameters
@@ -39,8 +39,45 @@ if ($db_conn !== null) {
     $model = new Model($db_conn);
     $utility = new Utility();
     $generator = new QRCodeGenerator();
-    $paystack = new PaystackPayment();
     $mail = new MailService();
+
+    // Initialize iNPAY
+    // Initialize iNPAY
+    $inpaySettings = [];
+    try {
+        // Attempt to fetch settings
+        $inpaySettings = $model->getRows('tbl_payment_settings', ['return_type' => 'single', 'where' => ['is_active' => 1]]);
+    } catch (Exception $e) {
+        // If fetch fails (likely table missing), create table and retry
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS `tbl_payment_settings` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `provider` varchar(50) NOT NULL DEFAULT 'inpay',
+                `public_key` varchar(255) NOT NULL,
+                `secret_key` varchar(255) NOT NULL,
+                `environment` varchar(50) NOT NULL DEFAULT 'live',
+                `is_active` tinyint(1) NOT NULL DEFAULT 1,
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+            $db_conn->exec($sql);
+
+            // Check if empty and insert default
+            $check = $db_conn->query("SELECT count(*) FROM tbl_payment_settings");
+            if ($check->fetchColumn() == 0) {
+                $db_conn->exec("INSERT INTO tbl_payment_settings (public_key, secret_key, environment) VALUES ('', '', 'live')");
+            }
+
+            // Retry fetch
+            $inpaySettings = $model->getRows('tbl_payment_settings', ['return_type' => 'single', 'where' => ['is_active' => 1]]);
+        } catch (Exception $ex) {
+            // Silently fail or log if creation fails too
+            error_log("Failed to create tbl_payment_settings: " . $ex->getMessage());
+        }
+    }
+
+    $secretKey = $inpaySettings['secret_key'] ?? '';
+    $publicKey = $inpaySettings['public_key'] ?? '';
+    $inpay = new InpayPayment($secretKey, $publicKey);
 } else {
     // Handle the case when the connection fails (e.g., show an error message or stop further processing)
     echo "Database connection failed.";

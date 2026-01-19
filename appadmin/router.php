@@ -1,4 +1,3 @@
-
 <?php
 include 'adminquery.php';
 // Validate and decode pageid
@@ -67,6 +66,13 @@ $navigationSettings = [
         'page_name' => 'Generate Clearance for Additional Captured Candidates',
         'module' => 'Clearance',
         'reference' => !empty($_GET['reference']) ? $_GET['reference'] : null,
+        'clearedSchool' => null
+    ],
+    'paymentSettings' => [
+        'pageid' => 'paymentSettings',
+        'page_name' => 'Payment Gateway Configuration',
+        'module' => 'Settings',
+        'reference' => null,
         'clearedSchool' => null
     ]
 ];
