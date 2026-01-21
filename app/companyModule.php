@@ -59,15 +59,10 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
 
         // Record the log
         $user->recordLog(
-            $_SESSION['active'],
-            'Consultant Profile Updated',
-            sprintf(
-                'User ID: %d updated consultant company profile details. Company Name: %s, Contact Email: %s.',
-                $_SESSION['active'],
-                $companyData['companyName'],
-                $companyData['contactEmail']
-            )
-        );
+                    $_SESSION['active'],
+                    'Consultant Profile Updated',
+                    "User ID: {$_SESSION['active']} updated consultant company profile details. Company Name: {$companyData['companyName']}, Contact Email: {$companyData['contactEmail']}. "
+                );
 
 
         // Redirect with success notification
@@ -141,12 +136,8 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
                 // Record the log
                 $user->recordLog(
                     $_SESSION['active'],
-                    'Consultant Password Changed',
-                    sprintf(
-                        'User ID: %d successfully changed login password from IP Address: %s.',
-                        $_SESSION['active'],
-                        $_SERVER['REMOTE_ADDR']
-                    )
+                    'Login Password Change ',
+                    "User ID: {$_SESSION['active']} successfully changed login password from IP Address: {$_SERVER['REMOTE_ADDR']}. "
                 );
 
 

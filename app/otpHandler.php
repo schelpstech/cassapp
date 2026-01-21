@@ -18,11 +18,7 @@ if ($data['action'] === 'sendOtp') {
     $user->recordLog(
         $_SESSION['active'],
         'Password Change OTP Sent',
-        sprintf(
-            'User ID: %d requested password change OTP sent to email address: %s.',
-            $_SESSION['active'],
-            $consultantDetails['contactEmail']
-        )
+        "User ID: {$_SESSION['active']} requested password change OTP sent to email address: {$consultantDetails['contactEmail']}"
     );
 
     echo json_encode(['status' => 'success', 'message' => 'OTP sent']);
@@ -36,10 +32,7 @@ if ($data['action'] === 'verifyOtp') {
         $user->recordLog(
             $_SESSION['active'],
             'Password Change OTP Expired',
-            sprintf(
-                'User ID: %d attempted to verify an expired OTP.',
-                $_SESSION['active']
-            )
+            "User ID: {$_SESSION['active']}  attempted to verify an expired OTP "
         );
 
         echo json_encode(['status' => 'error', 'message' => 'OTP expired']);
@@ -53,10 +46,7 @@ if ($data['action'] === 'verifyOtp') {
         $user->recordLog(
             $_SESSION['active'],
             'Password Change OTP Verified',
-            sprintf(
-                'User ID: %d successfully verified password change OTP.',
-                $_SESSION['active']
-            )
+            "User ID: {$_SESSION['active']} successfully verified password change OTP "
         );
 
         echo json_encode(['status' => 'success', 'message' => 'OTP verified']);
@@ -66,10 +56,7 @@ if ($data['action'] === 'verifyOtp') {
         $user->recordLog(
             $_SESSION['active'],
             'Invalid Password OTP Attempt',
-            sprintf(
-                'User ID: %d attempted password OTP verification with an invalid OTP.',
-                $_SESSION['active']
-            )
+            "User ID: {$_SESSION['active']} attempted password OTP verification with an invalid OTP."
         );
 
         echo json_encode(['status' => 'error', 'message' => 'Invalid OTP']);
