@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recordCandidates']) &
         $utility->redirectWithNotification('warning', 'Record already exists for this school and exam year. Please update the record instead.', 'capturingRecord');
     }
     // Generate a unique reference
-    $uniqueReference = 'CASS3'. $utility->generateRandomDigits(8).strtoupper($utility->generateRandomText(3));
+    $uniqueReference = 'CASS3' . $utility->generateRandomDigits(8) . strtoupper($utility->generateRandomText(3));
 
     // Query to fetch school type based on school code
     $tblName = 'tbl_schoollist';
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recordCandidates']) &
     ];
     $selectedSchoolType = $model->getRows($tblName, $conditions);
     if (!empty($selectedSchoolType)) {
-        $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
+        $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 250 : (($selectedSchoolType['schType'] == 2) ? 150 : '');
         // Calculate the remittance amount
         $amountDue = $numberCaptured * $ratePerCandidate;
     } else {
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recordCandidates']) &
         $user->recordLog(
             $_SESSION['active'],
             'Captured Record Created',
-            sprintf('User ID: %d recorded number of captured candidate for Centre Number : %d.', $_SESSION['active'], $recordSchoolCode)
+            "User ID :  {$_SESSION['active']} recorded {$numberCaptured} number of captured candidate for Centre Number: {$recordSchoolCode}.",
         );
 
         // Redirect with success notification
@@ -138,7 +138,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCandidates'
     ];
     $selectedSchoolType = $model->getRows($tblName, $conditions);
     if (!empty($selectedSchoolType)) {
-        $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
+        $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 250 : (($selectedSchoolType['schType'] == 2) ? 150 : '');
         // Calculate the remittance amount
         $amountDue = $numberCaptured * $ratePerCandidate;
     } else {
@@ -167,7 +167,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCandidates'
         $user->recordLog(
             $_SESSION['active'],
             'Captured Record Edited',
-            sprintf('User ID: %d edited number of captured candidate for Centre Number : %d.', $_SESSION['active'], $recordSchoolCode)
+            "User ID :  {$_SESSION['active']} edited number captured to {$numberCaptured} as number of captured candidate for Centre Number: {$recordSchoolCode}."
         );
 
         // Redirect with success notification
@@ -179,7 +179,8 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCandidates'
         // Redirect with error notification
         $utility->redirectWithNotification('danger', 'An error occurred while updating the number of captured candidates.', 'capturingRecord');
     }
-} if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_submitted_clearance']) && $utility->inputDecode($_POST['verify_submitted_clearance']) === 'checkClearanceValidity') {
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_submitted_clearance']) && $utility->inputDecode($_POST['verify_submitted_clearance']) === 'checkClearanceValidity') {
     $clearanceCode = isset($_POST['clearanceCode']) ? htmlspecialchars($_POST['clearanceCode'], ENT_QUOTES, 'UTF-8') : '';
 
     if (empty($clearanceCode)) {
@@ -235,7 +236,6 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCandidates'
         $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID does not exist in our record.');
         $utility->redirect('../view/verifyClearance.php');
     }
-}
- else {
+} else {
     $utility->redirectWithNotification('danger', 'Unknown Request.', 'capturingRecord');
 }

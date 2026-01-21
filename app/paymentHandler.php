@@ -18,7 +18,7 @@ function recordTransaction($model, $data)
 }
 
 // Dynamic Verify URL - Prefer dynamic over hardcoded
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'];
 $verifyUrl = "$protocol://$host/app/paymentHandler.php";
 
@@ -26,7 +26,7 @@ $verifyUrl = "$protocol://$host/app/paymentHandler.php";
 function loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference)
 {
     if (!$inpay) {
-        throw new Exception("Payment gateway not initialized.");
+        throw new Exception('Payment gateway not initialized.');
     }
     $publicKey = $inpay->getPublicKey();
     // Include the view file. Variables $publicKey, $amount, $email, etc. will be available in the included file's scope.
@@ -70,10 +70,16 @@ if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['p
         ];
 
         recordTransaction($model, $transactionData);
+        $user->recordLog(
+            $_SESSION['active'],
+            'Payment Initiated',
+            "User ID: {$_SESSION['active']} initiated Individual School payment for Centre Number: {$centreNumber}. 
+    Amount Due: ₦{$paymentDetails['amountdue']}. 
+    Transaction Reference: {$transactionReference}."
+        );
         loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
-
     } catch (Exception $e) {
-        $utility->redirectWithNotification('danger', "Error completing transaction: " . $e->getMessage(), 'capturingRecord');
+        $utility->redirectWithNotification('danger', 'Error completing transaction: ' . $e->getMessage(), 'capturingRecord');
     }
 }
 
@@ -136,10 +142,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
             ];
 
             recordTransaction($model, $transactionData);
-            loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
+            $user->recordLog(
+                $_SESSION['active'],
+                'Payment Initiated',
+                "User ID: {$_SESSION['active']} initiated Additional Candidate payment for Centre Number: {$recordSchoolCode}. 
+    Number of Additional Candidates: {$numberCaptured}. 
+    Amount Due: ₦{$amountDue}. 
+    Transaction Reference: {$transactionReference}."
+            );
 
+            loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
         } catch (Exception $e) {
-            $utility->redirectWithNotification('danger', "Error completing transaction: " . $e->getMessage(), 'capturingRecord');
+            $utility->redirectWithNotification('danger', 'Error completing transaction: ' . $e->getMessage(), 'capturingRecord');
         }
     } else {
         $utility->redirectWithNotification('danger', 'Addition of candidates can only be done for schools with existing clearance records.', 'capturingRecord');
@@ -180,7 +194,7 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
 
             validatePaymentParameters($email, $amount, $callbackUrl);
 
-            $transactionReference = $schoolCount . "SCH" . strtoupper($utility->generateRandomText(4));
+            $transactionReference = $schoolCount . 'SCH' . strtoupper($utility->generateRandomText(4));
             $transactionData = [
                 'transactionRef' => $transactionReference,
                 'transSchoolCode' => $serializedArray,
@@ -191,13 +205,20 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
             ];
 
             recordTransaction($model, $transactionData);
-            loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
+            $user->recordLog(
+                $_SESSION['active'],
+                'Payment Initiated',
+                "User ID: {$_SESSION['active']} initiated Bulk Payment for {$schoolCount} schools. 
+                                Total Amount: ₦{$balanceRemittance}. 
+                                Transaction Reference: {$transactionReference}."
+            );
 
+            loadPaymentView($inpay, $email, $amount, $callbackUrl, $transactionReference);
         } catch (Exception $e) {
-            $utility->redirectWithNotification('danger', "Error completing transaction: " . $e->getMessage(), 'capturingRecord');
+            $utility->redirectWithNotification('danger', 'Error completing transaction: ' . $e->getMessage(), 'capturingRecord');
         }
     } else {
-        $utility->redirectWithNotification('danger', "No Pending transaction Found", 'capturingRecord');
+        $utility->redirectWithNotification('danger', 'No Pending transaction Found', 'capturingRecord');
     }
 }
 // Verify Payment (iNPAY)
@@ -210,8 +231,17 @@ if (isset($_GET['reference'])) {
         // The verifyTransaction method throws exception if not successful, so we are good if we reach here.
         // But let's be double sure.
         if ($transactionData['status'] === 'completed') {
+            $user->recordLog(
+                $_SESSION['active'],
+                'Payment Verification Successful',
+                "Payment verified successfully. 
+                                Transaction Reference: {$transactionReference}. 
+                                Amount Paid: ₦{$amountPaid}. 
+                                Payment Type: {$transDetails['transactionType']}."
+            );
+
             $transactionReference = $transactionData['reference'];
-            $amountPaid = $transactionData['amount'] / 100; // Convert amount to standard format (Naira)
+            $amountPaid = $transactionData['amount'] / 100;  // Convert amount to standard format (Naira)
 
             $tblName = 'tbl_transaction';
             $transData = [
@@ -252,6 +282,14 @@ if (isset($_GET['reference'])) {
                     ];
                     $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
                     $destination = 'clearancePage';
+                    $user->recordLog(
+                        $_SESSION['active'],
+                        'Clearance Updated',
+                        "Clearance completed for Centre Number: {$_SESSION['clearedSchool']} 
+                                        via Individual School payment. 
+                                        Transaction Reference: {$transactionReference}."
+                    );
+
                     break;
 
                 case 'Additional Candidate':
@@ -267,7 +305,7 @@ if (isset($_GET['reference'])) {
                     if (empty($selectedSchoolType['schType'])) {
                         $utility->redirectWithNotification('danger', 'School Type not specified.', 'capturingRecord');
                     }
-                    $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
+                    $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 250 : (($selectedSchoolType['schType'] == 2) ? 150 : '');
 
                     $newNumber = ($amountPaid / $ratePerCandidate) + $utility->inputDecode($_SESSION['ExNumber']);
                     $newAmountPaid = intval($amountPaid) + intval($utility->inputDecode($_SESSION['ExAmount']));
@@ -279,6 +317,14 @@ if (isset($_GET['reference'])) {
                     ];
                     $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
                     $destination = 'clearancePage';
+                    $user->recordLog(
+                        $_SESSION['active'],
+                        'Clearance Updated',
+                        "Additional candidates clearance updated for Centre Number: {$_SESSION['clearedSchool']}. 
+                        New Total Candidates: {$newNumber}. 
+                        Transaction Reference: {$transactionReference}."
+                    );
+
                     break;
 
                 case 'Bulk Payment':
@@ -292,6 +338,14 @@ if (isset($_GET['reference'])) {
                         'submittedby' => $_SESSION['activeID']
                     ];
                     $destination = 'capturingRecord';
+                    $user->recordLog(
+                        $_SESSION['active'],
+                        'Clearance Updated',
+                        "Bulk clearance completed for multiple schools. 
+                                Total Schools Cleared: {$schoolCount}. 
+                                Transaction Reference: {$transactionReference}."
+                    );
+
                     break;
 
                 default:
@@ -306,11 +360,17 @@ if (isset($_GET['reference'])) {
             }
 
             $utility->redirectWithNotification('success', 'Transaction verified and saved successfully.', $destination);
-
         } else {
             throw new Exception('Transaction verification failed. Status: ' . $transactionData['status']);
         }
     } catch (Exception $e) {
+        $user->recordLog(
+            $_SESSION['active'] ?? 0,
+            'Payment Verification Failed',
+            "Payment verification failed for Transaction Reference: {$_GET['reference']}. 
+    Error Message: {$e->getMessage()}."
+        );
+
         // Handle errors and redirect with an error message
         $utility->redirectWithNotification('danger', 'Error verifying transaction: ' . $e->getMessage(), 'capturingRecord');
     }
