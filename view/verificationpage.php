@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <?php
 include '../app/query.php';
 
-if(isset( $_SESSION['referencedSchoolForVerification']) && !empty( $_SESSION['referencedSchoolForVerification'])){
+if (isset($_SESSION['referencedSchoolForVerification']) && !empty($_SESSION['referencedSchoolForVerification'])) {
     $tblName = 'tbl_remittance';
     $conditions = [
         'where' => [
@@ -18,7 +17,7 @@ if(isset( $_SESSION['referencedSchoolForVerification']) && !empty( $_SESSION['re
         ],
         'return_type' => 'single', // Expect a single result
     ];
-}else{
+} else {
     $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID does not exist in our record.');
     $utility->redirect('../view/verifyClearance.php');
 }
@@ -76,6 +75,58 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
         .table th {
             width: 35%;
         }
+
+        .verified-seal {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            width: 150px;
+            height: 150px;
+            border: 6px solid #008751;
+            border-radius: 50%;
+            text-align: center;
+            color: #008751;
+            font-weight: 800;
+            z-index: 3;
+            background: rgba(255, 255, 255, 0.92);
+            animation: sealIn 0.9s ease-out forwards;
+        }
+
+        .verified-seal span {
+            display: block;
+            margin-top: 38px;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+
+        .verified-seal small {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        @keyframes sealIn {
+            0% {
+                transform: scale(0.5) rotate(-20deg);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.1) rotate(5deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+            }
+        }
+
+        @media print {
+            .verified-seal {
+                animation: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -93,6 +144,13 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
                             <div class="watermark">
                                 <?php echo ($verifyClearanceInfo['clearanceStatus'] == 200) ? 'VERIFIED' : 'INVALID'; ?>
                             </div>
+                            <?php if ($verifyClearanceInfo['clearanceStatus'] == 200): ?>
+                                <div class="verified-seal">
+                                    <span>VERIFIED</span>
+                                    <small>OGMoEST</small>
+                                </div>
+                            <?php endif; ?>
+
 
                             <!-- Header -->
                             <div class="text-center mb-4 position-relative" style="z-index:2;">
@@ -186,15 +244,82 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
             </div>
         </div>
     </section>
-<div id="warningMessage" style="display:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: rgba(255, 0, 0, 0.7); color: white; font-size: 18px; border-radius: 10px;">
+    <div id="warningMessage" style="display:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: rgba(255, 0, 0, 0.7); color: white; font-size: 18px; border-radius: 10px;">
         Warning: Screenshot capture detected!
     </div>
     <script src="./plugins/jquery/jquery.min.js"></script>
     <script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./dist/js/adminlte.min2167.js?v=3.2.0"></script>
-    <script src="./plugins/custom/secure.js"></script>
 
 </body>
 
 </html>
 
+<script>
+(() => {
+
+    const REDIRECT_URL = "https://ogmoestconsultants.com/view/verifyClearance.php";
+    const REDIRECT_TIME = 60; // seconds
+    let timeLeft = REDIRECT_TIME;
+
+    const warningBox = document.getElementById('warningMessage');
+
+    function showWarning(message = "Unauthorized capture detected!") {
+        if (!warningBox) return;
+        warningBox.innerText = message;
+        warningBox.style.display = 'block';
+        clearTimeout(warningBox._timer);
+        warningBox._timer = setTimeout(() => {
+            warningBox.style.display = 'none';
+        }, 3000);
+    }
+
+    /* ---------------- AUTO REDIRECT WITH COUNTDOWN ---------------- */
+    const countdownTimer = setInterval(() => {
+        timeLeft--;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            window.location.href = REDIRECT_URL;
+        }
+    }, 1000);
+
+    /* ---------------- PRINT SCREEN DETECTION (BEST EFFORT) ---------------- */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'PrintScreen' || e.keyCode === 44) {
+            showWarning("Screen capture is not permitted!");
+            navigator.clipboard?.writeText(''); // clears clipboard (supported browsers)
+        }
+    });
+
+    /* ---------------- DEV TOOLS & VIEW SOURCE BLOCK ---------------- */
+    document.addEventListener('keydown', (e) => {
+        if (
+            e.keyCode === 123 || // F12
+            (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) ||
+            (e.ctrlKey && e.key === 'U')
+        ) {
+            e.preventDefault();
+            showWarning("Developer tools are disabled!");
+        }
+    });
+
+    /* ---------------- RIGHT CLICK BLOCK ---------------- */
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showWarning("Right-click is disabled on this page!");
+    });
+
+    /* ---------------- TAB SWITCH / MINIMIZE DETECTION ---------------- */
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            showWarning("Leaving this page invalidates verification!");
+        }
+    });
+
+    window.addEventListener('blur', () => {
+        showWarning("Focus lost. Verification page is protected!");
+    });
+
+})();
+</script>

