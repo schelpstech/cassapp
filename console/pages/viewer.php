@@ -78,6 +78,11 @@ include '../include/aside.php';
                 case 'paymentSettings':
                     include './form/paymentSettings.php';
                     break;
+
+                case 'auditlog':
+                    include './report/auditlog.php';
+                    break;
+
                 default:
                     include './adminDashboard.php';
                     break;

@@ -119,6 +119,14 @@
                         <p>Payment Settings</p>
                     </a>
                 </li>
+                <!-- Settings -->
+                <li class="nav-item">
+                    <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('auditlog'); ?>"
+                        class="nav-link <?php echo ($pageId == 'auditlog') ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>Audit Log</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

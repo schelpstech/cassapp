@@ -74,6 +74,13 @@ $navigationSettings = [
         'module' => 'Settings',
         'reference' => null,
         'clearedSchool' => null
+    ],
+    'auditlog' => [
+        'pageid' => 'auditlog',
+        'page_name' => 'Audit Log',
+        'module' => 'Settings',
+        'reference' => null,
+        'clearedSchool' => null
     ]
 ];
 

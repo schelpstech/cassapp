@@ -28,6 +28,13 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
         $utility->setNotification('alert-success', 'icon fas fa-check', 'OOps. Sign in Again');
         $utility->redirect('../console/index.php');
     }
+
+    //logviewer
+    $conditions = [
+        'order_by' => 'id DESC'
+    ];
+    $logHistory = $model->getRows('log', $conditions);
+
     //Select Active Exam Year
 
     $tblName = 'examyear';
