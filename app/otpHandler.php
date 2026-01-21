@@ -8,23 +8,70 @@ if ($data['action'] === 'sendOtp') {
     $_SESSION['pwd_otp'] = $otp;
     $_SESSION['pwd_otp_exp'] = time() + 300;
 
+    $mail->sendEmail(
+        $consultantDetails['contactEmail'],
+        "Password Change OTP",
+        "Your OTP is $otp"
+    );
 
+    // Record log: OTP sent
+    $user->recordLog(
+        $_SESSION['active'],
+        'Password Change OTP Sent',
+        sprintf(
+            'User ID: %d requested password change OTP sent to email address: %s.',
+            $_SESSION['active'],
+            $consultantDetails['contactEmail']
+        )
+    );
 
-     $mail->sendEmail($consultantDetails['contactEmail'], "Password Change OTP", "Your OTP is $otp");
-
-    echo json_encode(['status'=>'success','message'=>'OTP sent']);
+    echo json_encode(['status' => 'success', 'message' => 'OTP sent']);
 }
 
 if ($data['action'] === 'verifyOtp') {
+
     if (time() > $_SESSION['pwd_otp_exp']) {
-        echo json_encode(['status'=>'error','message'=>'OTP expired']);
+
+        // Record log: OTP expired
+        $user->recordLog(
+            $_SESSION['active'],
+            'Password Change OTP Expired',
+            sprintf(
+                'User ID: %d attempted to verify an expired OTP.',
+                $_SESSION['active']
+            )
+        );
+
+        echo json_encode(['status' => 'error', 'message' => 'OTP expired']);
         exit;
     }
 
     if ($data['otp'] == $_SESSION['pwd_otp']) {
         $_SESSION['otp_verified'] = true;
-        echo json_encode(['status'=>'success','message'=>'OTP verified']);
+
+        // Record log: OTP verified
+        $user->recordLog(
+            $_SESSION['active'],
+            'Password Change OTP Verified',
+            sprintf(
+                'User ID: %d successfully verified password change OTP.',
+                $_SESSION['active']
+            )
+        );
+
+        echo json_encode(['status' => 'success', 'message' => 'OTP verified']);
     } else {
-        echo json_encode(['status'=>'error','message'=>'Invalid OTP']);
+
+        // Record log: Invalid OTP attempt
+        $user->recordLog(
+            $_SESSION['active'],
+            'Invalid Password OTP Attempt',
+            sprintf(
+                'User ID: %d attempted password OTP verification with an invalid OTP.',
+                $_SESSION['active']
+            )
+        );
+
+        echo json_encode(['status' => 'error', 'message' => 'Invalid OTP']);
     }
 }

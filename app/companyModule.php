@@ -8,7 +8,7 @@ if (!isset($_SESSION['module']) || $_SESSION['module'] !== 'Dashboard') {
 }
 
 // Check if the form submission is valid
-if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_company_details']) === "company_profile_editor_form") {
+if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_company_details']) === 'company_profile_editor_form') {
     // Ensure the user is authenticated
     if (!isset($_SESSION['activeID']) || empty($_SESSION['activeID'])) {
         $utility->redirectWithNotification('danger', 'Unauthorized access. Please log in.', 'login');
@@ -31,8 +31,8 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
 
     // Sanitize and validate input data
     $companyData = [
-        'companyName' =>  preg_replace('/[^a-zA-Z0-9\s&,\.\-\'()]/', '', $_POST['companyName']),
-        'companyAddress' => preg_replace('/[^a-zA-Z0-9\s&,\.\-\'()]/', '', $_POST['companyAddress']),
+        'companyName' => preg_replace("/[^a-zA-Z0-9\s&,\.\-'()]/", '', $_POST['companyName']),
+        'companyAddress' => preg_replace("/[^a-zA-Z0-9\s&,\.\-'()]/", '', $_POST['companyAddress']),
         'contactPhone' => filter_var($_POST['contactPhone'], FILTER_SANITIZE_NUMBER_INT),
         'contactEmail' => filter_var($_POST['contactEmail'], FILTER_VALIDATE_EMAIL),
     ];
@@ -60,9 +60,15 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
         // Record the log
         $user->recordLog(
             $_SESSION['active'],
-            'Consultant Details Edited',
-            sprintf('User ID: %d edited consultant details for company ID: %d.', $_SESSION['active'], $_SESSION['activeID'])
+            'Consultant Profile Updated',
+            sprintf(
+                'User ID: %d updated consultant company profile details. Company Name: %s, Contact Email: %s.',
+                $_SESSION['active'],
+                $companyData['companyName'],
+                $companyData['contactEmail']
+            )
         );
+
 
         // Redirect with success notification
         $utility->redirectWithNotification('success', 'Consultant company details have been updated.', 'consultantDashboard');
@@ -73,7 +79,7 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
         // Redirect with error notification
         $utility->redirectWithNotification('danger', 'An error occurred while updating the consultant details.', 'consultantDashboard');
     }
-} elseif (isset($_POST['new_user_password_credential']) && $utility->inputDecode($_POST['new_user_password_credential']) === "user_password_editor_form") {
+} elseif (isset($_POST['new_user_password_credential']) && $utility->inputDecode($_POST['new_user_password_credential']) === 'user_password_editor_form') {
     // Ensure the user is authenticated
     if (!isset($_SESSION['activeID']) || empty($_SESSION['activeID'])) {
         $utility->redirectWithNotification('danger', 'Unauthorized access. Please log in.', 'login');
@@ -82,9 +88,9 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
     $tblName = 'book_of_life';
     $logTable = 'log';
 
-    $oldPassword = !empty($_POST["oldPassword"]) ? htmlspecialchars($_POST["oldPassword"]) : null;
-    $newPassword = !empty($_POST["newPassword"]) ? htmlspecialchars($_POST["newPassword"]) : null;
-    $confirmPassword = !empty($_POST["confirmPassword"]) ? htmlspecialchars($_POST["confirmPassword"]) : null;
+    $oldPassword = !empty($_POST['oldPassword']) ? htmlspecialchars($_POST['oldPassword']) : null;
+    $newPassword = !empty($_POST['newPassword']) ? htmlspecialchars($_POST['newPassword']) : null;
+    $confirmPassword = !empty($_POST['confirmPassword']) ? htmlspecialchars($_POST['confirmPassword']) : null;
 
     // Validate passwords
     if ($newPassword !== $confirmPassword) {
@@ -135,9 +141,14 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
                 // Record the log
                 $user->recordLog(
                     $_SESSION['active'],
-                    'Consultant Password Modified',
-                    $_SERVER['REMOTE_ADDR'] . ' modified login password'
+                    'Consultant Password Changed',
+                    sprintf(
+                        'User ID: %d successfully changed login password from IP Address: %s.',
+                        $_SESSION['active'],
+                        $_SERVER['REMOTE_ADDR']
+                    )
                 );
+
 
                 // Redirect with success notification
                 $utility->redirectWithNotification('success', 'Login Credential has been updated.', 'consultantpwdMgr');
