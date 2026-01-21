@@ -27,9 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let ratePerCandidate = 0;
 
         if (schoolType === "Public") {
-            ratePerCandidate = 280;
+            ratePerCandidate = 250;
         } else if (schoolType === "Private") {
-            ratePerCandidate = 130;
+            ratePerCandidate = 150;
         } else {
             remittanceField.value = "₦0.00";
             return;
