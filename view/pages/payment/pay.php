@@ -73,7 +73,7 @@
 
   <!-- iNPAY Inline SDK -->
   <script>
-    (function () {
+    (function() {
       // Configuration from PHP
       var config = {
         buttonId: 'inpay-pay-button',
@@ -89,81 +89,81 @@
           reference: '<?php echo $transactionReference; ?>',
           callback_url: '<?php echo $callbackUrl; ?>'
         }
-      // paymentMethods omitted to use backend configuration
-    };
+        // paymentMethods omitted to use backend configuration
+      };
 
-    var sdkPromise;
+      var sdkPromise;
 
-    function loadSdk() {
-      if (window.iNPAY && typeof window.iNPAY.InpayCheckout === 'function') {
-        return Promise.resolve(window.iNPAY.InpayCheckout);
-      }
+      function loadSdk() {
+        if (window.iNPAY && typeof window.iNPAY.InpayCheckout === 'function') {
+          return Promise.resolve(window.iNPAY.InpayCheckout);
+        }
 
-      if (!sdkPromise) {
-        sdkPromise = new Promise(function (resolve, reject) {
-          var script = document.createElement('script');
-          script.src = 'https://js.inpaycheckout.com/v2/inline.js';
-          script.onload = function () {
-            if (window.iNPAY && typeof window.iNPAY.InpayCheckout === 'function') {
-              resolve(window.iNPAY.InpayCheckout);
-            } else {
-              reject(new Error('iNPAY checkout initialisation failed.'));
-            }
-          };
-          script.onerror = function () {
-            reject(new Error('Unable to load iNPAY checkout script.'));
-          };
-          document.head.appendChild(script);
-        });
-      }
-
-      return sdkPromise;
-    }
-
-    function launchCheckout() {
-      loadSdk()
-        .then(function (Checkout) {
-          var checkout = new Checkout();
-          checkout.checkout({
-            apiKey: config.publicKey,
-            amount: config.amountKobo,
-            email: config.customer.email,
-            metadata: JSON.stringify(config.metadata),
-            // paymentMethods: config.paymentMethods, // Omitted
-            onSuccess: function (reference) {
-              // reference is either a string or object with a `reference` key
-              var ref = typeof reference === 'object' ? reference.reference : reference;
-              // Redirect to callback URL for server verification
-              window.location.href = config.metadata.callback_url + '?reference=' + ref;
-            },
-            onFailure: function (error) {
-              alert('Payment failed: ' + (error && error.message ? error.message : 'Unknown error'));
-            },
-            onExpired: function () {
-              alert('Payment session expired. Please try again.');
-            },
-            onError: function (error) {
-              alert('Payment error: ' + (error && error.message ? error.message : 'Unknown error'));
-            }
+        if (!sdkPromise) {
+          sdkPromise = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://js.inpaycheckout.com/v2/inline.js';
+            script.onload = function() {
+              if (window.iNPAY && typeof window.iNPAY.InpayCheckout === 'function') {
+                resolve(window.iNPAY.InpayCheckout);
+              } else {
+                reject(new Error('iNPAY checkout initialisation failed.'));
+              }
+            };
+            script.onerror = function() {
+              reject(new Error('Unable to load iNPAY checkout script.'));
+            };
+            document.head.appendChild(script);
           });
-        })
-        .catch(function (error) {
-          alert(error.message || 'Unable to start payment.');
-        });
-    }
+        }
 
-    // Auto-launch
-    if (typeof Promise === 'undefined') {
-      var polyfill = document.createElement('script');
-      polyfill.src = 'https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js';
-      polyfill.onload = launchCheckout;
-      polyfill.onerror = launchCheckout;
-      document.head.appendChild(polyfill);
-    } else {
-      launchCheckout();
-    }
+        return sdkPromise;
+      }
 
-    }) ();
+      function launchCheckout() {
+        loadSdk()
+          .then(function(Checkout) {
+            var checkout = new Checkout();
+            checkout.checkout({
+              apiKey: config.publicKey,
+              amount: config.amountKobo,
+              email: config.customer.email,
+              metadata: JSON.stringify(config.metadata),
+              // paymentMethods: config.paymentMethods, // Omitted
+              onSuccess: function(reference) {
+                // reference is either a string or object with a `reference` key
+                var ref = typeof reference === 'object' ? reference.reference : reference;
+                // Redirect to callback URL for server verification
+                window.location.href = config.metadata.callback_url + '?reference=' + ref;
+              },
+              onFailure: function(error) {
+                alert('Payment failed: ' + (error && error.message ? error.message : 'Unknown error'));
+              },
+              onExpired: function() {
+                alert('Payment session expired. Please try again.');
+              },
+              onError: function(error) {
+                alert('Payment error: ' + (error && error.message ? error.message : 'Unknown error'));
+              }
+            });
+          })
+          .catch(function(error) {
+            alert(error.message || 'Unable to start payment.');
+          });
+      }
+
+      // Auto-launch
+      if (typeof Promise === 'undefined') {
+        var polyfill = document.createElement('script');
+        polyfill.src = 'https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js';
+        polyfill.onload = launchCheckout;
+        polyfill.onerror = launchCheckout;
+        document.head.appendChild(polyfill);
+      } else {
+        launchCheckout();
+      }
+
+    })();
   </script>
 </body>
 

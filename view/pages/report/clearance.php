@@ -85,11 +85,12 @@
                                 <!-- Larger QR Code -->
                                 <img
                                     src="<?php echo $generator->generateQRCode(
-                                                'https://ogmoestconsultants.com/app/clearanceModule.php?verify=' .
+                                                'https://ogmoestconsultants.com/app/clearanceModule.php?verify_submitted_clearance_ID=' .
                                                     $utility->inputEncode($printClearanceInfo['Rem_uniquereference'])
                                             ); ?>"
                                     class="img-fluid mb-4 border p-2"
                                     style="max-width:260px;">
+
 
                                 <!-- Strong Clearance Badge -->
                                 <div class="badge badge-success p-4" style="font-size:1.6rem;">
