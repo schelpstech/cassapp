@@ -1,115 +1,135 @@
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card card-secondary card-outline">
-                    <div class="card-body box-profile">
-                        <!-- Header Section -->
-                        <div class="row">
-                            <div class="col-lg-4 offset-lg-4 text-center">
-                                <img src="../../storage/app/moest.jpg" alt="Logo" class="img-fluid">
-                            </div>
-                            <div class="col-lg-10 offset-lg-1">
-                                <div class="text-center">
-                                    <br>
-                                    <h2><strong>Ogun State Ministry of Education, Science & Technology</strong></h2>
-                                    <h3><strong>Biometrics & CASS 3 Clearance for WASSCE 2025</strong></h3>
-                                </div>
-                            </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <div class="card shadow-lg border-0 certificate-card">
+                    <div class="card-body p-5">
+
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <img src="../../storage/app/moest.jpg" alt="OGMoEST Logo" class="mb-3" style="max-width:120px;">
+                            <h2 class="font-weight-bold text-uppercase">
+                                Ogun State Ministry of Education, Science & Technology
+                            </h2>
+                            <h4 class="mb-0 font-weight-semibold">
+                                Biometrics & CASS 3 Clearance Certificate
+                            </h4>
+                            <h6 class="text-muted">WASSCE 2026</h6>
                         </div>
 
-                        <!-- Color Dividers -->
-                        <hr style="background-color: orange; height: 5px; margin: 0;">
-                        <hr style="background-color: yellow; height: 5px; margin: 0;">
-                        <hr style="background-color: green; height: 5px; margin: 0;">
-                        <br>
+                        <!-- Color Identity Strip -->
+                        <div class="d-flex mb-4">
+                            <div style="height:6px;background:#f7941d;flex:1;"></div>
+                            <div style="height:6px;background:#ffd200;flex:1;"></div>
+                            <div style="height:6px;background:#008751;flex:1;"></div>
+                        </div>
 
-                        <!-- QR Code Section -->
+                        <!-- Body -->
                         <div class="row">
-                            <div class="col-lg-6 offset-lg-3 text-center">
-                                <img src="<?php echo $generator->generateQRCode(
-                                                'https://assoec.org/app/clearanceModule.php?verify_submitted_clearance_ID=' .
+                            <div class="col-md-8">
+
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <th>Clearance ID</th>
+                                        <td class="font-weight-bold text-primary h5">
+                                            <?php echo $printClearanceInfo['Rem_uniquereference']; ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Centre Number</th>
+                                        <td><?php echo $printClearanceInfo['centreNumber']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>School Name</th>
+                                        <td><?php echo $printClearanceInfo['SchoolName']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>School Zone (LGA)</th>
+                                        <td><?php echo $printClearanceInfo['lga']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>School Type</th>
+                                        <td>
+                                            <?php
+                                            echo ($printClearanceInfo['schType'] == 1)
+                                                ? 'Public School'
+                                                : 'Private School';
+                                            ?>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Pronounced Candidate Count -->
+                                    <tr>
+                                        <th class="align-middle">Candidates Cleared</th>
+                                        <td class="text-success font-weight-bold display-4">
+                                            <?php echo $utility->inputDecode($printClearanceInfo['numberCaptured']); ?>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Consultant</th>
+                                        <td><?php echo $printClearanceInfo['companyName']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date Issued</th>
+                                        <td><?php echo $printClearanceInfo['clearanceDate']; ?></td>
+                                    </tr>
+                                </table>
+
+                            </div>
+
+                            <!-- QR + STATUS -->
+                            <div class="col-md-4 text-center">
+
+                                <!-- Larger QR Code -->
+                                <img
+                                    src="<?php echo $generator->generateQRCode(
+                                                'https://ogmoestconsultants.com/app/clearanceModule.php?verify=' .
                                                     $utility->inputEncode($printClearanceInfo['Rem_uniquereference'])
-                                            ); ?>" alt="QR Code" class="img-fluid">
+                                            ); ?>"
+                                    class="img-fluid mb-4 border p-2"
+                                    style="max-width:260px;">
+
+                                <!-- Strong Clearance Badge -->
+                                <div class="badge badge-success p-4" style="font-size:1.6rem;">
+                                    <?php echo $utility->inputDecode($printClearanceInfo['numberCaptured']); ?><br>
+                                    <span style="font-size:1rem;">Candidates</span><br>
+                                    CLEARED
+                                </div>
+
+                                <p class="mt-3 text-muted small">
+                                    Scan QR code to verify authenticity
+                                </p>
                             </div>
                         </div>
 
-                        <!-- Clearance Details -->
-                        <ul class="list-group list-group-unbordered mb-3 mt-4">
-                            <li class="list-group-item">
-                                <b>Clearance ID:</b>
-                                <span class="float-right">
-                                    <h2><strong><?php echo $printClearanceInfo['Rem_uniquereference']; ?></strong></h2>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Centre Number:</b>
-                                <span class="float-right">
-                                    <h4><strong><?php echo $printClearanceInfo['centreNumber']; ?> </strong></h4>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>School Name:</b>
-                                <span class="float-right">
-                                    <h4><strong><?php echo $printClearanceInfo['SchoolName']; ?></strong></h4>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>School Zone:</b>
-                                <span class="float-right">
-                                    <h4><strong><?php echo $printClearanceInfo['lga']; ?></strong></h4>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>School Type:</b>
-                                <span class="float-right">
-                                    <h4><strong>
-                                            <?php echo ($printClearanceInfo['schType'] == 1) ? 'Public School' : (($printClearanceInfo['schType'] == 2) ? 'Private School' : 'Unknown'); ?>
-                                        </strong></h4>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Number of Candidates Cleared:</b>
-                                <span class="float-right">
-                                    <h4><strong><?php echo $utility->inputDecode($printClearanceInfo['numberCaptured']); ?></strong></h4>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Consultant Name:</b>
-                                <span class="float-right">
-                                    <h4><strong><?php echo $printClearanceInfo['companyName']; ?></strong></h4>
-                                </span>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Date Issued:</b>
-                                <span class="float-right">
-                                    <h4><strong><?php echo $printClearanceInfo['clearanceDate']; ?></strong></h4>
-                                </span>
-                            </li>
-                        </ul>
 
-                        <!-- Officer Details -->
-                        <ul class="list-group list-group-unbordered">
+                        <!-- Footer -->
+                        <hr>
+                        <div class="text-center small text-muted">
+                            This clearance certificate is system-generated and electronically verifiable.
+                        </div>
 
-                            <li class="list-group-item">
-                                <b>Clearance Status:</b>
-                                <span class="float-right">
-                                    <h1><strong>
-                                            <?php echo ($printClearanceInfo['clearanceStatus'] == 200) ? 'CLEARED' : (($printClearanceInfo['clearanceStatus'] == 100) ? 'PENDING' : 'Unknown'); ?>
-                                        </strong></h1>
-                                </span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </section>
 
-<script>
-    // Automatically trigger the print function when the page loads
-    window.onload = function() {
-        window.print();
-    };
-</script>
+<style>
+.certificate-card th {
+    width: 220px;
+    font-weight: 600;
+}
+
+.certificate-card .display-4 {
+    line-height: 1;
+}
+
+.certificate-card img {
+    background: #fff;
+}
+</style>

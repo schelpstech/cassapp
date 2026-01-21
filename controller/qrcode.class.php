@@ -30,5 +30,28 @@ class QRCodeGenerator
         $dataUri = $result->getDataUri();
         echo $dataUri;
     }
+
+
+    public function generateQRCoder($data)
+    {
+        $writer = new \Endroid\QrCode\Writer\PngWriter();
+
+        $qrCode = \Endroid\QrCode\Builder\Builder::create()
+            ->writer($writer)
+            ->data($data)
+            ->size(300)
+            ->margin(20)
+            ->build();
+
+        $filePath = __DIR__ . '/../storage/qrcodes/' . md5($data) . '.png';
+
+        if (!is_dir(dirname($filePath))) {
+            mkdir(dirname($filePath), 0777, true);
+        }
+
+        $qrCode->saveToFile($filePath);
+
+        return $filePath; // IMPORTANT: return file path only
+    }
+
 }
-?>
