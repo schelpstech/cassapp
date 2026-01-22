@@ -37,6 +37,7 @@
                                         <th>School LGA & Type</th>
                                         <th>Clearance Status</th>
                                         <th>Consultant</th>
+                                        <th>Action</th> <!-- New column for unallocate button -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,18 +47,17 @@
                                     ?>
                                         <tr>
                                             <td><?php echo $count++; ?></td>
-                                            <td><?php echo '<b>' .$data['schoolCode'] . " - ". $data['SchoolName'] ?? 'N/A' . '</b>'; ?></td>
+                                            <td><?php echo '<b>' . $data['schoolCode'] . " - " . $data['SchoolName'] ?? 'N/A' . '</b>'; ?></td>
                                             <td>
                                                 <?php
-                                                // Display status as buttons
                                                 switch ($data['schType'] ?? 'N/A') {
-                                                    case 1: // Public
-                                                        echo $data['lga'].' Public';
+                                                    case 1:
+                                                        echo $data['lga'] . ' Public';
                                                         break;
-                                                    case 2: // Private
-                                                        echo $data['lga'].' Private';
+                                                    case 2:
+                                                        echo $data['lga'] . ' Private';
                                                         break;
-                                                    default: // Unknown 
+                                                    default:
                                                         echo 'UnSpecified';
                                                         break;
                                                 }
@@ -65,27 +65,48 @@
                                             </td>
                                             <td>
                                                 <?php
-                                                // Display Clearance status as buttons
                                                 switch ($data['clearanceStatus'] ?? 'N/A') {
-                                                    case 200: // Cleared
+                                                    case 200:
                                                         echo '<span class="badge badge-success d-flex align-items-center justify-content-center">
-                                                                <i class="fas fa-check-circle me-2"></i> Cleared</span>';
+                                <i class="fas fa-check-circle me-2"></i> Cleared</span>';
                                                         break;
-                                                    case 100: // Pending CLearance
+                                                    case 100:
                                                         echo '<span class="badge badge-warning d-flex align-items-center justify-content-center">
-                                                                <i class="fas fa-check-times me-2"></i> Pending</span>';
+                                <i class="fas fa-check-times me-2"></i> Pending</span>';
                                                         break;
-                                                    default: // Not Recorded 
+                                                    default:
                                                         echo '<span class="badge badge-danger d-flex align-items-center justify-content-center">
-                                                                <i class="fas fa-times-circle me-2"></i> Not Recorded</span>';
+                                <i class="fas fa-times-circle me-2"></i> Not Recorded</span>';
                                                         break;
                                                 }
                                                 ?>
                                             </td>
                                             <td><?php echo '<b>' . $data['companyName'] ?? 'N/A' . '</b>'; ?></td>
+                                            <td>
+                                                <?php
+                                                // Only show unallocate button if clearance is Not Recorded or Pending
+                                                if (($data['clearanceStatus'] ?? 'N/A') === 'N/A' || ($data['clearanceStatus'] ?? 0) == 100) {
+                                                ?>
+                                                    <form method="post" action="../../appadmin/allocationModule.php" onsubmit="return confirm('Are you sure you want to unallocate this school?');">
+                                                        <input type="hidden" name="schoolCode" value="<?php echo $data['schoolCode']; ?>">
+                                                        <input type="hidden" name="examYear" value="<?php echo $data['examYear']; ?>">
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                            name="schoolunallocator"
+                                                            value="<?php echo $utility->inputEncode('school_profile_unallocator_form'); ?>>
+                                                            <i class=" fas fa-times-circle me-1"></i> Unallocate
+                                                        </button>
+                                                    </form>
+                                                <?php
+                                                } else {
+                                                    echo '<span class="text-muted">Cannot Unallocate</span>';
+                                                }
+                                                ?>
+                                            </td>
+
                                         </tr>
                                     <?php } ?>
                                 </tbody>
+
                             </table>
                         <?php } else { ?>
                             <!-- Display message if no transactions -->

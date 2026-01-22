@@ -25,29 +25,7 @@ public function rollBack()
     return $this->db->rollBack();
 }
 
-    public function select_all($tablename)
-    {
-        try {
-            // Define query to insert values into the users table
-            $sql = "SELECT * FROM " . $tablename . "";
 
-            // Prepare the statement
-            $query = $this->db->prepare($sql);
-
-            // Bind parameters
-
-            // Execute the query
-            $query->execute();
-
-            // Return row as an array indexed by both column name
-            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                $rows[] = $row;
-            }
-            return $rows;
-        } catch (PDOException $e) {
-            array_push($errors, $e->getMessage());
-        }
-    }
 
 
     public function insert_data($table, $data)
@@ -235,26 +213,33 @@ public function rollBack()
         }
     }
 
-    /* 
-     * Delete data from the database 
-     * @param string name of the table 
-     * @param array where condition on deleting data 
+    /**
+     * Delete records
      */
-    public function delete($table, $conditions)
+    public function delete($table, $condition = "1=1")
     {
-        $whereSql = '';
-        if (!empty($conditions) && is_array($conditions)) {
-            $whereSql .= ' WHERE ';
-            $i = 0;
-            foreach ($conditions as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $whereSql .= $pre . $key . " = '" . $value . "'";
-                $i++;
+        $params = [];
+
+        if (is_array($condition)) {
+            $whereParts = [];
+            foreach ($condition as $key => $value) {
+                $paramKey = ":where_" . $key;
+                $whereParts[] = "$key = $paramKey";
+                $params[$paramKey] = $value; // bind value later
             }
+            $conditionSql = implode(" AND ", $whereParts);
+        } else {
+            $conditionSql = $condition; // raw string condition
         }
-        $sql = "DELETE FROM " . $table . $whereSql;
-        $delete = $this->db->exec($sql);
-        return $delete ? $delete : false;
+
+        $sql = "DELETE FROM {$table} WHERE {$conditionSql}";
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($params as $param => $val) {
+            $stmt->bindValue($param, $val);
+        }
+
+        return $stmt->execute();
     }
     // Log Out User
     public function log_out_user()
