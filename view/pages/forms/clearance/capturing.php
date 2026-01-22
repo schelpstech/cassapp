@@ -66,7 +66,7 @@
 
                             <!-- Remittance Due -->
                             <div class="form-group">
-                                <label for="remittanceDue">Remittance Due @ &#8358;280 per Candidate for Public & &#8358;130 per Candidate for Private :</label>
+                                <label for="remittanceDue">Remittance Due @ &#8358;250 per Candidate for Public & &#8358;150 per Candidate for Private :</label>
                                 <div class="input-group">
                                     <input type="text" id="remittanceDue" class="form-control" name="remittanceDue"
                                         readonly

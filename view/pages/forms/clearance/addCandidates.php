@@ -81,7 +81,7 @@ if (!empty($SelectedCapturingRecords['schType'])) {
 
                             <!-- Remittance Due -->
                             <div class="form-group">
-                                <label for="addremittanceDue">Remittance Due @ &#8358;280 per Candidate:</label>
+                                <label for="addremittanceDue">Remittance Due @ &#8358;250 per Candidate:</label>
                                 <div class="input-group">
                                     <input type="text" id="addremittanceDue" class="form-control" name="remittanceDue"
                                         readonly
@@ -126,9 +126,9 @@ if (!empty($SelectedCapturingRecords['schType'])) {
             // Determine the rate based on the school type
             let ratePerCandidate = 0;
             if (schoolType === "Public") {
-                ratePerCandidate = 280; // Rate for Public schools
+                ratePerCandidate = 250; // Rate for Public schools
             } else if (schoolType === "Private") {
-                ratePerCandidate = 130; // Rate for Private schools
+                ratePerCandidate = 150; // Rate for Private schools
             } else {
                 remittanceField.value = "Invalid School Type"; // Handle unexpected school types
                 return; // Exit if school type is invalid
