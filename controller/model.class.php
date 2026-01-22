@@ -10,6 +10,21 @@ class Model
     {
         $this->db = $db_conn;
     }
+    public function beginTransaction()
+{
+    return $this->db->beginTransaction();
+}
+
+public function commit()
+{
+    return $this->db->commit();
+}
+
+public function rollBack()
+{
+    return $this->db->rollBack();
+}
+
     public function select_all($tablename)
     {
         try {

@@ -56,36 +56,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     // Access denied
-                    $logData = [
-                        'user_name' => $userid,
-                        'activity' => 'Login Attempt',
-                        'uip' => $_SERVER['REMOTE_ADDR'],
-                        'description' => 'Unsuccessful - Access Denied'
-                    ];
+                    $user->recordLog($userid, 'Admin Login Attempt', 'Unsuccessful - Admin Access Denied');
                     $model->insert_data($logTable, $logData);
                     $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Access Denied! Contact administrator.');
                     $utility->redirect('../console/index.php');
                 }
             } else {
                 // Incorrect password
-                $logData = [
-                    'user_name' => $userid,
-                    'activity' => 'Login Attempt',
-                    'uip' => $_SERVER['REMOTE_ADDR'],
-                    'description' => 'Unsuccessful - Wrong Password'
-                ];
+                 $user->recordLog($userid, 'Admin Login Attempt', 'Unsuccessful - Admin Access Denied Wrong Password');
                 $model->insert_data($logTable, $logData);
                 $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid Login Credentials!');
                 $utility->redirect('../console/index.php');
             }
         } else {
             // Invalid username
-            $logData = [
-                'user_name' => $userid,
-                'activity' => 'Login Attempt',
-                'uip' => $_SERVER['REMOTE_ADDR'],
-                'description' => 'Unsuccessful - Invalid Username'
-            ];
+             $user->recordLog($userid, 'Admin Login Attempt', 'Unsuccessful - Admin Access Denied Wrong Username');
             $model->insert_data($logTable, $logData);
             $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid Login Credentials!');
             $utility->redirect('../console/index.php');
