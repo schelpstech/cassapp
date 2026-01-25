@@ -3,6 +3,8 @@
 // begin or resume session
 session_start();
 
+/* PHP timezone */
+date_default_timezone_set('Africa/Lagos');
 // Include necessary file
 include_once 'user.class.php';
 include_once 'model.class.php';
@@ -24,6 +26,11 @@ $db_conn = null;
 try {
     $db_conn = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
     $db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+     /* MySQL session settings */
+    $db_conn->exec("SET time_zone = '+01:00'");
+    $db_conn->exec("SET NAMES utf8mb4");
+
 } catch (PDOException $e) {
     // Handle the error
     $errors = [];
