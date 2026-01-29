@@ -159,18 +159,23 @@
 </style>
 
 <script>
-    document.title = "Clearance_Certificate_<?php echo $printClearanceInfo['centreNumber']." - ". $printClearanceInfo['SchoolName']; ?>_<?php echo $printClearanceInfo['Rem_uniquereference']; ?>";
-</script>
+    // Set default filename for "Print to PDF"
+    document.title = "Clearance_Certificate_<?php 
+        echo $printClearanceInfo['centreNumber'] . ' - ' .
+             preg_replace('/[^a-zA-Z0-9 _-]/', '', $printClearanceInfo['SchoolName']) . '_' .
+             $printClearanceInfo['Rem_uniquereference'];
+    ?>";
 
-<script>
+    // Auto-open print dialog after page loads
     window.onload = function () {
         setTimeout(function () {
             window.print();
         }, 500);
     };
-</script>
-<script>
+
+    // Auto-close tab after printing (works if opened via window.open)
     window.onafterprint = function () {
         window.close();
     };
 </script>
+
