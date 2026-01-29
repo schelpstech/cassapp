@@ -133,4 +133,44 @@
 .certificate-card img {
     background: #fff;
 }
+@media print {
+    body {
+        margin: 0;
+        background: #fff;
+    }
+
+    .content {
+        padding: 0 !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .certificate-card {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+}
 </style>
+
+<script>
+    document.title = "Clearance_Certificate_<?php echo $printClearanceInfo['centreNumber']." - ". $printClearanceInfo['SchoolName']; ?>_<?php echo $printClearanceInfo['Rem_uniquereference']; ?>";
+</script>
+
+<script>
+    window.onload = function () {
+        setTimeout(function () {
+            window.print();
+        }, 500);
+    };
+</script>
+<script>
+    window.onafterprint = function () {
+        window.close();
+    };
+</script>
