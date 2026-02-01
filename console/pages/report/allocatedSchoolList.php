@@ -91,7 +91,7 @@
                                                         <input type="hidden" name="schoolCode" value="<?php echo $data['schoolCode']; ?>">
                                                         <input type="hidden" name="examYear" value="<?php echo $data['examYear']; ?>">
                                                         <button type="submit" class="btn btn-danger btn-sm"
-                                                            name="schoolunallocator"
+                                                            name="schoolUnallocator"
                                                             value="<?php echo $utility->inputEncode('school_profile_unallocator_form'); ?>>
                                                             <i class=" fas fa-times-circle me-1"></i> Unallocate
                                                         </button>

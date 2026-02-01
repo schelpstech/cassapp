@@ -129,11 +129,10 @@ if (
 
 /* =========================================================
    SCHOOL UNALLOCATION
-   ========================================================= */ elseif (
-    isset($_POST['schoolunallocator']) &&
-    $utility->inputDecode($_POST['schoolunallocator']) === 'school_profile_unallocator_form'
-) {
-
+   ========================================================= */ 
+   elseif (
+    isset($_POST['schoolUnallocator']) &&
+    $utility->inputDecode($_POST['schoolUnallocator']) === 'school_profile_unallocator_form') {
     if (!isset($_POST['schoolCode']) || empty($_POST['schoolCode'])) {
         $utility->redirectWithNotification(
             'danger',

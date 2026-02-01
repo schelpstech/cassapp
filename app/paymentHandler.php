@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
             $selectedSchoolType = $model->getRows($tblName, $conditions);
 
             if (!empty($selectedSchoolType)) {
-                $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : 0);
+                $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 250 : (($selectedSchoolType['schType'] == 2) ? 150 : 0);
                 $amountDue = $numberCaptured * $ratePerCandidate;
             } else {
                 $utility->redirectWithNotification('danger', 'School Type not Specified.', 'capturingRecord');
