@@ -29,7 +29,7 @@ if (!isset($_SESSION['activeAdmin'])) {
     <link rel="stylesheet" href="../../view/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="../../view/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <link rel="stylesheet" href="../../view/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-    <link rel="stylesheet" href="./../view/plugins/bs-stepper/css/bs-stepper.min.css">
+    <link rel="stylesheet" href="../../view/plugins/bs-stepper/css/bs-stepper.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>

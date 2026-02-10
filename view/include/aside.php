@@ -88,12 +88,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo route('consultantClearedSchools'); ?>"
+                            <a href="javascript:void(0);"
+                                onclick="alert('This page is not yet active. Please check back later.');"
                                 class="nav-link <?php echo ($pageId === 'consultantClearedSchools') ? 'active' : ''; ?>">
                                 <i class="fas fa-check-circle nav-icon"></i>
                                 <p><strong>Clearance Summary</strong></p>
                             </a>
                         </li>
+
                     </ul>
                 </li>
 
