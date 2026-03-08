@@ -307,6 +307,21 @@ class Utility
         ];
     }
 
+    /**
+     * Sanitize user input
+     * @param mixed $data
+     * @return string
+     */
+    public function sanitizeInput($data)
+    {
+        if (is_array($data)) {
+            return array_map([$this, 'sanitizeInput'], $data);
+        }
 
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 
+        return $data;
+    }
 }

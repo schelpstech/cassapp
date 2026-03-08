@@ -87,13 +87,39 @@
                                 <p><strong>Allocated Schools</strong></p>
                             </a>
                         </li>
+                        <?php
+                        $pageRoute = '';
+
+                        if ($consultantDetails['workStatus'] == 100) {
+                            $pageRoute = 'uploadJobCompletion';
+                        } elseif ($consultantDetails['workStatus'] == 200) {
+                            $pageRoute = 'consultantClearedSchools';
+                        } elseif ($consultantDetails['workStatus'] == 300) {
+                            $pageRoute = 'pendingVerification';
+                        }
+                        ?>
+
                         <li class="nav-item">
-                            <a href="javascript:void(0);"
-                                onclick="alert('This page is not yet active. Please check back later.');"
-                                class="nav-link <?php echo ($pageId === 'consultantClearedSchools') ? 'active' : ''; ?>">
-                                <i class="fas fa-check-circle nav-icon"></i>
-                                <p><strong>Clearance Summary</strong></p>
-                            </a>
+
+                            <?php if ($consultantDetails['workStatus'] == 300) { ?>
+
+                                <a href="javascript:void(0);"
+                                    onclick="alert('The Job Verification Form you submitted is currently being verified. The clearance summary will be available shortly.')"
+                                    class="nav-link">
+                                    <i class="fas fa-clock nav-icon"></i>
+                                    <p><strong>Clearance Summary</strong></p>
+                                </a>
+
+                            <?php } else { ?>
+
+                                <a href="<?php echo route($pageRoute); ?>"
+                                    class="nav-link <?php echo ($pageId === $pageRoute) ? 'active' : ''; ?>">
+                                    <i class="fas fa-check-circle nav-icon"></i>
+                                    <p><strong>Clearance Summary</strong></p>
+                                </a>
+
+                            <?php } ?>
+
                         </li>
 
                     </ul>
