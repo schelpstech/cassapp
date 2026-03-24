@@ -82,6 +82,9 @@ include '../include/aside.php';
                 case 'auditlog':
                     include './report/auditlog.php';
                     break;
+                case 'viewUploadedLetter':
+                    include './form/jobCompletionForm.php';
+                    break;
 
                 default:
                     include './adminDashboard.php';

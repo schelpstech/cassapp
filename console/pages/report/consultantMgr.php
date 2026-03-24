@@ -23,8 +23,8 @@
             <div class="col-lg-10 offset-1">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> List of Allocated Schools
-                            <?php echo date("d-m-Y") ?>
+                        <h3 class="card-title"> List of Engaged Consultants for WASSCE
+                            <?php echo date('Y') ?>
                         </h3>
                     </div>
 
@@ -36,7 +36,7 @@
                                     <th>UserCode</th>
                                     <th>Company Name</th>
                                     <th>Contact Details</th>
-                                    <th>Contact Address</th>
+                                    <th>Clearance Report</th>
                                     <th>Remark</th>
                                 </tr>
                             </thead>
@@ -54,13 +54,38 @@
                                                 <?php echo '<b>' . $data['user_name'] . '</b>'; ?>
                                             </td>
                                             <td>
-                                                <?php echo '<b>' .  $data['companyName']  . '</b>'; ?>
+                                                <?php echo '<b>' . $data['companyName'] . '</b>'; ?>
                                             </td>
                                             <td>
-                                                <?php echo '<b>' . $data['contactPhone'] . '<br>' . $data['contactEmail'] . '</b>'; ?>
+                                                <?php echo '<b>' . $data['contactPhone'] . '<br> <small>' . $data['contactEmail'] . '</small></b>'; ?>
+                                                <?php echo '<br> <small>' . $data['companyAddress'] . '</small>'; ?>
                                             </td>
                                             <td>
-                                                <?php echo '<b>' . $data['companyAddress'] . '</b>'; ?>
+                                                <?php
+                                                $workStatus = intval($data['workStatus']);
+
+                                                $encodedPage = $utility->inputEncode('viewUploadedLetter');
+                                                $consultant = $data['userId'];
+
+                                                if ($workStatus === 200) {
+
+                                                    echo '<a href="../../appadmin/router.php?reference=' . $consultant . '&pageid=' . $encodedPage . '"
+                                                        class="btn btn-success btn-block">
+                                                        Approved - View Document
+                                                    </a>';
+                                                } elseif ($workStatus === 300) {
+
+                                                    echo '<a href="../../appadmin/router.php?reference=' . $consultant . '&pageid=' . $encodedPage . '"
+                                                        class="btn btn-warning btn-block">
+                                                        Pending Verification - View
+                                                    </a>';
+                                                } else {
+
+                                                    echo '<button class="btn btn-secondary btn-block" disabled>
+                                                        Inactive
+                                                    </button>';
+                                                }
+                                                ?>
                                             </td>
                                             <td>
                                                 <?php
@@ -73,7 +98,7 @@
                                                                 Inactive
                                                             </button> ';
                                                 } else {
-                                                    echo " Unspecified ";
+                                                    echo ' Unspecified ';
                                                 }
                                                 ?>
                                             </td>

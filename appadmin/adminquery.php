@@ -67,6 +67,24 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
     ];
     $consultantList = $model->getRows($tblName, $conditions);
 
+    if (
+        !empty($_SESSION['module']) && isset($_SESSION['module']) &&
+        !empty($_SESSION['reference']) && isset($_SESSION['reference']) &&
+        $_SESSION['module'] == 'Clearane Summary Report'
+    ) {
+        $tblName = 'book_of_life';
+        $conditions = [
+            'where' => [
+                'tbl_consultantdetails.userId' => $_SESSION['reference'],
+            ],
+            'joinl' => [
+                'tbl_consultantdetails' => ' on book_of_life.userid = tbl_consultantdetails.userId'
+            ],
+            'return_type' => 'single'
+        ];
+        $consultantData = $model->getRows($tblName, $conditions);
+    }
+
 
     if (
         !empty($_SESSION['module']) && isset($_SESSION['module']) &&

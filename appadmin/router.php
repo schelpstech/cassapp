@@ -26,6 +26,13 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
+        'viewUploadedLetter' => [
+        'pageid' => 'viewUploadedLetter',
+        'page_name' => 'View Uploaded Job Completion Letter',
+        'module' => 'Clearane Summary Report',
+        'reference' => !empty($_GET['reference']) ? $_GET['reference'] : null,
+        'clearedSchool' => null
+    ],
     'consultantClearedSchools' => [
         'pageid' => 'consultantClearedSchools',
         'page_name' => 'Summary of Cleared Schools',
